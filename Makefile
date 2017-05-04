@@ -25,15 +25,15 @@ JDFLAGS := -sourcepath $(SOURCE_DIR) -d $(DOC_DIR) -link https://https://docs.or
 
 # Dependencies and Classpath
 HAMCREST_JAR := lib/junit/hamcrest-core-1.3.jar
-JUNIT_JAR := lib/junit/junit-4.12.jar
-ASM := lib/asm/asm-5.0.4.jar
-ASM_COMMONS := lib/asm/asm-commons-5.0.4.jar
-ASM_TREE := lib/asm/asm-tree-5.0.4.jar
+JUNIT_JAR    := lib/junit/junit-4.12.jar
+ASM          := lib/asm/asm-5.0.4.jar
+ASM_COMMONS  := lib/asm/asm-commons-5.0.4.jar
+ASM_TREE     := lib/asm/asm-tree-5.0.4.jar
 
-JACOCO_CORE := lib/jacoco/org.jacoco.core-0.7.5.201505241946.jar
+JACOCO_CORE   := lib/jacoco/org.jacoco.core-0.7.5.201505241946.jar
 JACOCO_REPORT := lib/jacoco/org.jacoco.report-0.7.5.201505241946.jar
 JACOCO_AGENT  := lib/jacoco/jacocoagent.jar
-UCT_REPORT := lib/tools
+UCT_REPORT    := lib/tools
 
 class_path := \
  OUTPUT_DIR \
@@ -80,40 +80,25 @@ all: compile_sources compile_tests
 # Set the Java CLASSPATH
 export CLASSPATH := $(call build-classpath,$(class_path))
 
-# Java Files
+# Java Sources
 all_java_sources := $(OUTPUT_DIR)/all.javas
-all_java_tests := $(OUTPUT_DIR)/tests.javas
-all_test_classes := $(OUTPUT_DIR)/test.classes
-
-$(test_classes):
-	$(FIND) $(OUTPUT_DIR) -type f -name "*Test.class" \
-	| $(AWK) -F/ '{print $NF}' \
-	| $(SED)
 
 .INTERMEDIATE: $(all_java_sources)
 $(all_java_sources):
 	($(FIND) $(SOURCE_DIR) -type f -name '*.java' | $(GREP) -v ".*Test.java") > $@
 
-.INTERMEDIATE: $(all_java_tests)
-$(all_java_tests):
-	$(FIND) $(TEST_DIR) -type f -name '*Test.java' > $@
-
 .PHONY: compile_sources
 compile_sources: $(all_java_sources)
 	$(JAVAC) $(JFLAGS) @$<
 
-# Print out the auto-generated classpath
-.PHONY: classpath
-classpath:
-	@echo CLASSPATH='$(CLASSPATH)'
+# Java Tests
+all_java_tests := $(OUTPUT_DIR)/tests.javas
 
-.PHONY: doc
-doc: $(all_java_sources)
-	$(JAVADOC) $(JDFLAGS) @$<
+.INTERMEDIATE: $(all_java_tests)
+$(all_java_tests):
+	$(FIND) $(TEST_DIR) -type f -name '*Test.java' > $@
 
-.PHONY: compile_tests
-compile_tests: $(all_java_tests)
-	$(JAVAC) $(JFLAGS) @$<
+all_test_classes := $(OUTPUT_DIR)/test.classes
 
 .INTERMEDIATE: $(all_test_classes)
 $(all_test_classes):
@@ -122,10 +107,26 @@ $(all_test_classes):
 		| $(AWK) -F/ '{printf $$NF}' \
     > $@
 
+## Compile JUnit test classes
+.PHONY: compile_tests
+compile_tests: $(all_java_tests)
+	$(JAVAC) $(JFLAGS) @$<
+
+## Run JUnit test classes
 .PHONY: test
 test: compile_tests $(all_test_classes)
 	$(JAVA) org.junit.runner.JUnitCore \
 		$$(cat $(all_test_classes))
+
+# Print out the auto-generated classpath
+.PHONY: classpath
+classpath:
+	@echo CLASSPATH='$(CLASSPATH)'
+
+# Generate Javadoc for all sources
+.PHONY: doc
+doc: $(all_java_sources)
+	$(JAVADOC) $(JDFLAGS) @$<
 
 .PHONY: clean
 clean:
