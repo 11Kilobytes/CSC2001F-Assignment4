@@ -22,3 +22,5 @@ This is a generic makefile for CSC2001F at UCT, it supports the following target
 - =compile_sources= :: Recompiles the sources in the =src= directory.
 - =compile_tests= :: Recompiles the tests in the =test= directory.
 
+It also comes with settings making it an =Eclipse= project. The archive =lib.zip= that
+you can find on Vula is necessary as well.
