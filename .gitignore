@@ -35,3 +35,6 @@ doc/
 
 ### Compiled Outputs ###
 bin/
+
+## Dependences
+lib/
