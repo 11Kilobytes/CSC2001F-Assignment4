@@ -1,0 +1,24 @@
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+#+OPTIONS: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
+#+OPTIONS: tasks:t tex:t timestamp:t title:t toc:t todo:t |:t
+#+TITLE: README
+#+DATE: <2017-05-04 Thu>
+#+AUTHOR: Kabelo Moiloa
+#+EMAIL: kabelomoiloa@Kabelos-MacBook-Pro.local
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 25.1.1 (Org mode 9.0.5)
+
+This is a generic makefile for CSC2001F at UCT, it supports the following targets:
+
+- =all= :: Compiles all files in the =src= and =test= directories and outputs the results to the =bin= directory
+- =test= :: Compiles all test files in the =test= directory and runs them. All test class names must end with =Test=.
+- =report= :: Generates a Jacoco Coverage Report in HTML format, placing the results in the =coveragereport= directory.
+- =doc= :: Generates a directory "doc" with all JavaDoc documentation of the source files.
+- =clean= :: Removes =jacoco.exec= and all files the following directories: =coveragereport=, =bin= and =doc=.
+- =classpath= :: Outputs the setting of =$CLASSPATH= used to compile and run Java programs.
+- =compile_sources= :: Recompiles the sources in the =src= directory.
+- =compile_tests= :: Recompiles the tests in the =test= directory.
+
