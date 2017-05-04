@@ -35,11 +35,13 @@ JACOCO_REPORT := lib/jacoco/org.jacoco.report-0.7.5.201505241946.jar
 JACOCO_AGENT  := lib/jacoco/jacocoagent.jar
 UCT_REPORT    := lib/tools
 
+COMMONS_CLI := lib/cli/commons-cli-1.3.1.jar
+
 class_path := \
  OUTPUT_DIR \
  HAMCREST_JAR JUNIT_JAR \
  ASM ASM_COMMONS ASM_TREE \
- JACOCO_CORE JACOCO_REPORT \
+ COMMONS_CLI JACOCO_CORE JACOCO_REPORT \
  UCT_REPORT
 
 # $(call build-classpath, variable-list)
@@ -115,7 +117,8 @@ compile_tests: $(all_java_tests)
 ## Run JUnit test classes
 .PHONY: test
 test: compile_tests $(all_test_classes)
-	$(JAVA) org.junit.runner.JUnitCore \
+	$(JAVA) -javaagent:$(JACOCO_AGENT) \
+		org.junit.runner.JUnitCore       \
 		$$(cat $(all_test_classes))
 
 # Print out the auto-generated classpath
@@ -132,3 +135,8 @@ doc: $(all_java_sources)
 clean:
 	$(RM) $(CLEAN_FILES)
 	$(foreach dir, $(CLEAN_DIRS),$(RM) $(dir)/*)
+
+# Jacoco
+.PHONY: report
+report: test
+	$(JAVA) Report .
