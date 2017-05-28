@@ -1,20 +1,21 @@
 import java.util.LinkedList;
+import java.lang.Math;
 
 /** This class represents an edge of a weighted directed graph.
  * Nodes in a graph (V, E) are represented by the integers 0..(|V| - 1)
  */
 
-public final class DirectedEdge {
+public final class DirectedEdge implements Comparable<DirectedEdge> {
     private final int from;
     private final int to;
-    private final int cost;
+    private final double cost;
 
     /** Constructs a directed edge.
      * @param from the node where the edge should start.
      * @param to the node where the edge should end.
      * @param cost the cost (weight) of this edge.
      */
-    public DirectedEdge(int from, int to, int cost) {
+    public DirectedEdge(int from, int to, double cost) {
         this.from = from;
         this.to = to;
         this.cost = cost;
@@ -32,7 +33,7 @@ public final class DirectedEdge {
     }
 
     /** Returns the cost associated with traversing this edge */
-    public int cost() {
+    public double cost() {
         return this.cost;
     }
 
@@ -45,7 +46,13 @@ public final class DirectedEdge {
             DirectedEdge otherE = (DirectedEdge) other;
             return this.from() == otherE.from()
                 && this.to() == otherE.to()
-                && this.cost() == otherE.cost();
+                && Math.abs(this.cost() - otherE.cost()) < 1E-9;
         }
+    }
+
+    /** Compares edges by cost
+     */
+    public int compareTo(DirectedEdge other) {
+        return Double.valueOf(cost).compareTo(other.cost);
     }
 }
