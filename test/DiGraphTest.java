@@ -59,11 +59,26 @@ public class DiGraphTest {
         g.addEdge(new DirectedEdge(2, 1, 1));
         DiGraph.PathsFrom pathsFrom0 = g.pathsFrom(0);
         assertTrue(pathsFrom0.hasPathTo(1));
-        assertTrue(pathsFrom0.multiplePathsTo(1));
+        assertFalse(pathsFrom0.multiplePathsTo(1));
         List<DirectedEdge> pathTo1 = pathsFrom0.pathTo(1);
         assertNotNull(pathTo1);
         assertTrue(pathTo1.size() == 2);
         assertEquals(new DirectedEdge(0, 2, 2), pathTo1.get(0));
         assertEquals(new DirectedEdge(2, 1, 1), pathTo1.get(1));
+    }
+
+    @Test
+    public void testMultiplePaths() {
+        DiGraph g = new DiGraph();
+        g.addEdge(new DirectedEdge(0, 1, 5));
+        g.addEdge(new DirectedEdge(0, 2, 2));
+        g.addEdge(new DirectedEdge(2, 1, 1));
+        g.addEdge(new DirectedEdge(0,3,1));
+        g.addEdge(new DirectedEdge(3, 4,1));
+        g.addEdge(new DirectedEdge(4,1,1));
+        DiGraph.PathsFrom pathsFrom0 = g.pathsFrom(0);
+        assertTrue(Math.abs(pathsFrom0.distTo(1) - 3) < 1E-6);
+        assertTrue(pathsFrom0.multiplePathsTo(1));
+
     }
 }

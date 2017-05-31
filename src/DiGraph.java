@@ -1,6 +1,8 @@
-/** This class represents a weighted directed graph
+/**
+ * This class represents a weighted directed graph
  * In a graph (V, E), nodes are represented with the integers 0..(|V| - 1).
  */
+
 import java.util.*;
 
 public class DiGraph {
@@ -67,18 +69,16 @@ public class DiGraph {
         }
 
         private void relax(Integer node) {
-            for (DirectedEdge e: edgesFrom(node)) {
-                if (nodePQ.contains(e.to()))
-                    multiplePathsTo[e.to()] = true;
+            for (DirectedEdge e : edgesFrom(node)) {
                 if (distTo[e.to()] > distTo[node] + e.cost()) {
                     edgeTo[e.to()] = e;
                     distTo[e.to()] = distTo[node] + e.cost();
                     if (nodePQ.contains(e.to())) {
                         nodePQ.changeKey(e.to(), distTo[e.to()]);
-                    }
-                    else
+                    } else
                         nodePQ.insert(e.to(), distTo[e.to()]);
-                }
+                } else if (Math.abs(distTo[e.to()] - (distTo[node] + e.cost())) < 1E-6)
+                    multiplePathsTo[e.to()] = true;
             }
         }
 
@@ -87,14 +87,18 @@ public class DiGraph {
          * the source and v. If one does not exist, <code>Double.POSITIVE_INFINITY</code>
          * is returned.
          */
-        public double distTo(int v) { return distTo[v]; }
+        public double distTo(int v) {
+            return distTo[v];
+        }
 
 
         /** Returns whether there exists a path between the source
          * and a given node.
          * @param v the endpoint to search for
          */
-        public boolean hasPathTo(int v) { return distTo[v] < Double.POSITIVE_INFINITY ;}
+        public boolean hasPathTo(int v) {
+            return distTo[v] < Double.POSITIVE_INFINITY;
+        }
 
         /** Returns a path to the given edge if one exists, otherwise <code>null</code>is returned.
          * @param v  the endpoint to search for
